@@ -13,6 +13,8 @@ function getUrl(code, callback) {
     });
 
 };
+
+
 async function getAll() {
     pool.query('SELECT *' + " FROM URLS;", function(error, results, fields) {
         if (error) throw error;
