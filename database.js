@@ -1,20 +1,22 @@
 var mysql = require("mysql");
 var config = require("./config.js")
 var fs = require("fs");
-var pool = mysql.createConnection("");
+var pool = mysql.createConnection(config.url);
 
 
 
-async function getUrl(code) {
+function getUrl(code, callback) {
     pool.query('SELECT *' + " FROM URLS WHERE ID =" + code + ";", function(error, results, fields) {
         if (error) throw error;
-        console.log('The solution is: ', results[0]);
+        //console.log('The solution is: ', results[0]);
+        callback(results);
     });
+
 };
 async function getAll() {
     pool.query('SELECT *' + " FROM URLS;", function(error, results, fields) {
         if (error) throw error;
-        console.log('The solution is: ', results);
+        //console.log('The solution is: ', results);
     });
 };
 
@@ -25,22 +27,12 @@ async function save(TERM, ID) {
         console.log("The data was not Unique")
     }
     if (Unique === true) {
-        console.log("The data was Unique")
+        //console.log("The data was Unique")
         pool.query('INSERT INTO URLS (ID,TERM) VALUES("' + ID + '","' + TERM + '")', function(error, results, fields) {
             if (error) throw error;
         });
     }
 };
-//checkUnique("123456hd")
-//getAll()
-save("debugTerm", "DeBUgCoDE")
-//getUrl("DeBUgCoDE")
-
-
-module.exports.getUrl = getUrl;
-module.exports.save = save;
-
-
 function checkUnique(code) {
     var data = fs.readFileSync("./codes.txt");
 
@@ -51,3 +43,8 @@ function checkUnique(code) {
         return true;
     }
 }
+
+module.exports.getUrl = getUrl;
+module.exports.save = save;
+module.exports.checkUnique = checkUnique;
+
