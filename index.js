@@ -8,6 +8,7 @@ const { getUrl, save, checkUnique } = require("./database.js") //Import the KEY 
 app.use(bodyParser.urlencoded({ extended: false })); 
 app.use(bodyParser.json());
 
+//In version 2.0 I will removed the hardcoded links and make stuff more easy to change.
 
 //Create a path that has params
 app.get("/q/:code", async function(request, response) {
@@ -22,12 +23,13 @@ app.get("/q/:code", async function(request, response) {
     }
     if (Unique === true) {
         //If it does not exist, redirect the user
-        response.redirect("https://searchofchoice.jontes.page/").status(200).end()
+        response.redirect("https://searchofchoice.jontes.page/error").status(200).end()
     }
 });
 
 
 app.post("/add", async function(request, response) {
+    console.log(request.body.term)
     let term = request.body.term;
     //Store the term thats posted in the body
     let code = CreateCode(8);
