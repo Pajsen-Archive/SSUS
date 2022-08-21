@@ -1,7 +1,6 @@
 var mysql = require("mysql");
 var config = require("./config.js");
 var fs = require("fs");
-let pool = mysql.createConnection(config.url);
 
 var connection = mysql.createConnection({
   host: config.database.host,
@@ -20,7 +19,7 @@ connection.connect(function (err) {
 });
 
 function getUrl(code, callback) {
-  pool.query(
+    connection.query(
     "SELECT *" + " FROM URLS WHERE ID =" + code + ";",
     function (error, results, fields) {
       if (error) throw error;
@@ -31,7 +30,7 @@ function getUrl(code, callback) {
 }
 
 async function getAll() {
-  pool.query("SELECT *" + " FROM URLS;", function (error, results, fields) {
+    connection.query("SELECT *" + " FROM URLS;", function (error, results, fields) {
     if (error) throw error;
     //console.log('Response: ', results);
   });
@@ -44,7 +43,7 @@ async function save(TERM, ID) {
   }
   if (Unique === true) {
     //console.log("The data was Unique")
-    pool.query(
+    connection.query(
       'INSERT INTO URLS (ID,TERM) VALUES("' + ID + '","' + TERM + '")',
       function (error, results, fields) {
         console.log("Added the following data to database:", TERM, ",", ID);
