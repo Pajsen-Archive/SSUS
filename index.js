@@ -18,12 +18,12 @@ app.get("/q/:code", async function(request, response) {
         //If it exists, get the code from the database
         getUrl(`${code}`, function(data) {
             //Redirect the user to the main page
-            response.redirect("https://searchofchoice.jontes.page/?q=" + data[0].TERM)
+            response.redirect(config.URL.search + data[0].TERM)
         })
     }
     if (Unique === true) {
         //If it does not exist, redirect the user
-        response.redirect("https://searchofchoice.jontes.page/error").status(200).end()
+        response.redirect(config.URL.error).status(200).end();
     }
 });
 
@@ -34,7 +34,7 @@ app.post("/add", async function(request, response) {
     //Store the term thats posted in the body
     let code = CreateCode(8);
     //generate a random 8 key long string and assign it to code
-    database.save(term, code)
+    save(term, code);
     //tell the database handler to save the term and the code
     response.send(code).status(200).end()
     //send the code to the client, assign the 200 OK HTTP status and end the request
@@ -46,7 +46,7 @@ function CreateCode(len, callback) {
     let text = "";
     let charset = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    for (let i = 0; i < len / 2; i++)
+    for (let i = 0; i < len; i++)
         text += charset.charAt(Math.floor(Math.random() * charset.length));
 
     return (text);
@@ -54,7 +54,7 @@ function CreateCode(len, callback) {
 
 //Handle 404
 app.all('*', (req, res) => {
-  res.status(404).redirect('https://searchofchoice.jontes.page/');
+    res.redirect(config.URL.notFound).status(404).end();
 });
 
 app.listen(3030, () => { console.log("Started server at port 3030") })
